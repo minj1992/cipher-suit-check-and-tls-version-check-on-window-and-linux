@@ -1,0 +1,68 @@
+# powershell command to check the chipher avilable in windows:
+Get-TlsCipherSuite | ForEach-Object { $_.Name }
+
+#powershell command to chekc the all tls verison available in winodws
+[Net.ServicePointManager]::SecurityProtocol | Get-Member -Static -Type Property | Select-Object -ExpandProperty Name
+
+
+#powershell command to disable perticulat cipher 
+
+$disabledCipher = "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"  # Replace this with the name of the cipher suite you want to disable
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\$disabledCipher"
+if (Test-Path $regPath) {
+    Set-ItemProperty -Path $regPath -Name "Enabled" -Value 0 -Force
+    Write-Host "Cipher suite '$disabledCipher' has been disabled."
+} else {
+    Write-Host "Cipher suite '$disabledCipher' was not found."
+}
+
+#powershll comand to enable perticualr cipher 
+$disabledCipher = "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"  # Replace this with the name of the cipher suite you want to disable
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\$disabledCipher"
+if (Test-Path $regPath) {
+    Set-ItemProperty -Path $regPath -Name "Enabled" -Value 0 -Force
+    Write-Host "Cipher suite '$disabledCipher' has been disabled."
+} else {
+    Write-Host "Cipher suite '$disabledCipher' was not found."
+}
+
+#powershll command to check if perticular cipher is disabled or enable state 
+
+$desiredCipher = "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"  # Replace this with the name of the cipher suite you want to check
+
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\$desiredCipher"
+$cipherEnabled = Test-Path $regPath
+#note: we can not check directly using command we need to check from registry 
+
+if ($cipherEnabled) {
+    Write-Host "Cipher suite '$desiredCipher' is enabled."
+} else {
+    Write-Host "Cipher suite '$desiredCipher' is disabled."
+}
+
+-------------------------------------------------
+
+Linux
+
+#to list cipher inlinux 
+openssl ciphers
+
+0r 
+
+openssl ciphers -v 'ALL:eNULL' | sort
+
+
+In Linux, checking the enabled or disabled status of a specific cipher suite typically involves inspecting the configuration of the application or service that uses OpenSSL, rather than using a command to directly query the status.
+
+For example, if you're interested in checking the status of a cipher suite for a web server like Apache or Nginx, you would typically look at the server's SSL/TLS configuration file (httpd.conf for Apache, or nginx.conf for Nginx) or the SSL/TLS virtual host configuration files.
+
+In these configuration files, cipher suites can be explicitly enabled or disabled using directives like SSLCipherSuite (for Apache) or ssl_ciphers (for Nginx).
+
+Here's a general approach to check the status of a cipher suite:
+
+Locate the SSL/TLS configuration file for your application or service.
+Look for the directive responsible for configuring cipher suites.
+Check if the specific cipher suite you're interested in is listed and whether it's explicitly enabled or disabled.
+You can then modify the configuration file as needed to enable or disable cipher suites according to your requirements. After making changes, you'll typically need to restart or reload the application or service for the changes to take effect.
+
+
