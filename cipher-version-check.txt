@@ -66,3 +66,52 @@ Check if the specific cipher suite you're interested in is listed and whether it
 You can then modify the configuration file as needed to enable or disable cipher suites according to your requirements. After making changes, you'll typically need to restart or reload the application or service for the changes to take effect.
 
 
+##################################### TLS-version linux ###########################################
+
+check the all tls version and which one is enable in linux 
+ChatGPT
+To check which TLS versions are enabled on a Linux system, you can inspect the SSL/TLS configuration of specific services or applications that use OpenSSL. Here's how you can do it for common services:
+
+For Apache:
+
+Check the SSL/TLS configuration file, typically located at /etc/httpd/conf.d/ssl.conf or /etc/apache2/sites-available/default-ssl.conf.
+Look for the SSLProtocol directive. This directive specifies the enabled SSL/TLS protocols.
+The enabled protocols will be listed after the directive. Common values include SSLv2, SSLv3, TLSv1, TLSv1.1, and TLSv1.2.
+For Nginx:
+
+Check the SSL/TLS configuration file, typically located at /etc/nginx/nginx.conf.
+Look for the ssl_protocols directive. This directive specifies the enabled SSL/TLS protocols.
+The enabled protocols will be listed after the directive. Common values include SSLv3, TLSv1, TLSv1.1, and TLSv1.2.
+For other services or applications that use OpenSSL, you'll need to locate and inspect their SSL/TLS configuration files.
+
+Here's an example command to check the SSL/TLS protocols enabled on Apache:
+
+bash
+Copy code
+grep -i sslprotocol /etc/httpd/conf.d/ssl.conf
+And for Nginx:
+
+bash
+Copy code
+grep -i ssl_protocols /etc/nginx/nginx.conf
+These commands will show you the enabled SSL/TLS protocols configured for Apache and Nginx, respectively. You may need to adjust the paths based on your system's configuration.
+
+-----> list tls version avialable in linux 
+
+To list the available TLS versions on a Linux system, you can use the openssl command. Here's how:
+
+bash
+Copy code
+openssl s_client -help 2>&1 | grep -o "^\s*-ssl[[:alnum:]]\+\s*"
+This command will list the available TLS versions supported by OpenSSL on your Linux system.
+
+Alternatively, you can use the following command to list the available SSL/TLS protocols:
+
+bash
+Copy code
+openssl ciphers -v 'ALL:eNULL' | awk '{print $2}' | sort | uniq
+This command will list all available SSL/TLS protocols supported by OpenSSL, including SSL versions (SSLv2, SSLv3) and TLS versions (TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3).
+
+
+
+
